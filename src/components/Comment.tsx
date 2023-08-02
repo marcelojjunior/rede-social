@@ -9,17 +9,24 @@ interface CommentProps {
     onDeleteComment: (comment: string) => void;
 }
 
-export function Comment({content, onDeleteComment}: CommentProps){
-    const [likeCount, setLikeCount] = useState(0);
+export function Comment({ content, onDeleteComment }: CommentProps) {
+    const [likeCount, setLikeCount] = useState(3);
+    const [isLiked, setIsLiked] = useState(false);
     const [openModalDelete, setOpenModalDelete] = useState(false);
 
-    function handleDeleteComment(){
+    function handleDeleteComment() {
         onDeleteComment(content);
     }
 
-    function handleLikeComment(){
+    function handleLikeComment() {
         setLikeCount((state) => {
-            return state + 1
+            if (isLiked) {
+                setIsLiked(false);
+                return state - 1;
+            } else {
+                setIsLiked(true);
+                return state + 1;
+            }
         });
     }
 
@@ -30,7 +37,7 @@ export function Comment({content, onDeleteComment}: CommentProps){
                 src={imageProfile}
                 alt=""
             />
-            <div 
+            <div
                 className="flex-1"
             >
                 <div className="bg-gray-800 p-4 rounded-lg">
@@ -65,9 +72,10 @@ export function Comment({content, onDeleteComment}: CommentProps){
                     </p>
                 </div>
                 <footer className="mt-4">
-                    <button 
+                    <button
                         onClick={handleLikeComment}
-                        className="text-gray-500 flex items-center hover:text-blue-100 rounded"
+                        onFocus={(e) => e.target.blur()}
+                        className={`flex items-center hover:text-blue-100 rounded ${isLiked ? 'text-blue-100' : 'text-gray-500'}`}
                     >
                         <ThumbsUp size={20} className="mr-2" />
                         Curtir<span>&nbsp;- {likeCount}</span>
@@ -75,7 +83,7 @@ export function Comment({content, onDeleteComment}: CommentProps){
                 </footer>
             </div>
 
-            <div 
+            <div
                 className={`${openModalDelete ? 'block' : 'hidden'} bg-gray-800 bg-opacity-50 backdrop-blur z-40 fixed w-full left-0 top-0 h-screen flex justify-center items-center`}
             >
                 <div className="bg-gray-300 w-max rounded-lg p-6 flex flex-col gap-6 justify-center items-center">
@@ -86,13 +94,13 @@ export function Comment({content, onDeleteComment}: CommentProps){
                         Você tem certeza que deseja excluir esse comentário?
                     </p>
                     <div className="flex gap-4">
-                        <button 
+                        <button
                             onClick={() => setOpenModalDelete(false)}
                             className="text-gray-700 hover:opacity-90 rounded-lg"
                         >
                             Cancelar
                         </button>
-                        <button 
+                        <button
                             onClick={handleDeleteComment}
                             className="text-red-danger bg-gray-800 py-2 px-6 rounded-lg hover:opacity-90"
                         >

@@ -11,6 +11,7 @@ interface CommentProps {
 
 export function Comment({content, onDeleteComment}: CommentProps){
     const [likeCount, setLikeCount] = useState(0);
+    const [openModalDelete, setOpenModalDelete] = useState(false);
 
     function handleDeleteComment(){
         onDeleteComment(content);
@@ -49,7 +50,8 @@ export function Comment({content, onDeleteComment}: CommentProps){
                             </time>
                         </div>
                         <button
-                            onClick={handleDeleteComment}
+                            // onClick={handleDeleteComment}
+                            onClick={() => setOpenModalDelete(true)}
                             className="text-gray-500 rounded hover:text-red-danger"
                             title="Deletar comentário"
                         >
@@ -71,6 +73,33 @@ export function Comment({content, onDeleteComment}: CommentProps){
                         Curtir<span>&nbsp;- {likeCount}</span>
                     </button>
                 </footer>
+            </div>
+
+            <div 
+                className={`${openModalDelete ? 'block' : 'hidden'} bg-gray-800 bg-opacity-50 backdrop-blur z-40 fixed w-full left-0 top-0 h-screen flex justify-center items-center`}
+            >
+                <div className="bg-gray-300 w-max rounded-lg p-6 flex flex-col gap-6 justify-center items-center">
+                    <h1 className="font-bold text-2xl text-gray-700">
+                        Excluir comentário
+                    </h1>
+                    <p className="text-gray-700 text-base">
+                        Você tem certeza que deseja excluir esse comentário?
+                    </p>
+                    <div className="flex gap-4">
+                        <button 
+                            onClick={() => setOpenModalDelete(false)}
+                            className="text-gray-700 hover:opacity-90 rounded-lg"
+                        >
+                            Cancelar
+                        </button>
+                        <button 
+                            onClick={handleDeleteComment}
+                            className="text-red-danger bg-gray-800 py-2 px-6 rounded-lg hover:opacity-90"
+                        >
+                            Sim, excluir
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     )
